@@ -20,6 +20,263 @@
     .nav-button:hover {
         background-color: #4589ad;
     }
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chess Board</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+            font-family: 'Garamond', serif;
+        }
+
+        .board-container {
+            display: inline-block;
+            padding: 30px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .board-wrapper {
+            display: grid;
+            grid-template-columns: 30px repeat(8, 50px) 30px;
+            grid-template-rows: 30px repeat(8, 50px) 30px;
+            gap: 0;
+        }
+
+        .coordinate {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: #56a1c8;
+        }
+
+        .coord-top { grid-row: 1; }
+        .coord-bottom { grid-row: 10; }
+        .coord-left { grid-column: 1; }
+        .coord-right { grid-column: 10; }
+
+        .board {
+            grid-column: 2 / 10;
+            grid-row: 2 / 10;
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(8, 50px);
+            outline: 1px solid #56a1c8;
+        }
+
+        .square {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .light {
+            background: white;
+        }
+
+        .dark {
+            background: #56a1c8;
+        }
+
+        .piece {
+            font-family: 'Garamond', serif;
+            font-weight: 600;
+            font-size: 32px;
+            cursor: grab;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .piece:active {
+            cursor: grabbing;
+        }
+
+        .piece.white {
+            color: #2c2c2c;
+        }
+
+        .piece.black {
+            color: #d4af37;
+        }
+
+        .square.highlight {
+            box-shadow: inset 0 0 0 3px rgba(255, 255, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="board-container">
+        <div class="board-wrapper">
+            <!-- Top coordinates (files: a-h) -->
+            <div class="coordinate coord-top" style="grid-column: 1;"></div>
+            <div class="coordinate coord-top" style="grid-column: 2;">a</div>
+            <div class="coordinate coord-top" style="grid-column: 3;">b</div>
+            <div class="coordinate coord-top" style="grid-column: 4;">c</div>
+            <div class="coordinate coord-top" style="grid-column: 5;">d</div>
+            <div class="coordinate coord-top" style="grid-column: 6;">e</div>
+            <div class="coordinate coord-top" style="grid-column: 7;">f</div>
+            <div class="coordinate coord-top" style="grid-column: 8;">g</div>
+            <div class="coordinate coord-top" style="grid-column: 9;">h</div>
+            <div class="coordinate coord-top" style="grid-column: 10;"></div>
+
+            <!-- Left coordinates (ranks: 8-1) -->
+            <div class="coordinate coord-left" style="grid-row: 2;">8</div>
+            <div class="coordinate coord-left" style="grid-row: 3;">7</div>
+            <div class="coordinate coord-left" style="grid-row: 4;">6</div>
+            <div class="coordinate coord-left" style="grid-row: 5;">5</div>
+            <div class="coordinate coord-left" style="grid-row: 6;">4</div>
+            <div class="coordinate coord-left" style="grid-row: 7;">3</div>
+            <div class="coordinate coord-left" style="grid-row: 8;">2</div>
+            <div class="coordinate coord-left" style="grid-row: 9;">1</div>
+
+            <!-- Chess board -->
+            <div class="board" id="board"></div>
+
+            <!-- Right coordinates (ranks: 8-1) -->
+            <div class="coordinate coord-right" style="grid-row: 2; visibility: hidden;">8</div>
+            <div class="coordinate coord-right" style="grid-row: 3; visibility: hidden;">7</div>
+            <div class="coordinate coord-right" style="grid-row: 4; visibility: hidden;">6</div>
+            <div class="coordinate coord-right" style="grid-row: 5; visibility: hidden;">5</div>
+            <div class="coordinate coord-right" style="grid-row: 6; visibility: hidden;">4</div>
+            <div class="coordinate coord-right" style="grid-row: 7; visibility: hidden;">3</div>
+            <div class="coordinate coord-right" style="grid-row: 8; visibility: hidden;">2</div>
+            <div class="coordinate coord-right" style="grid-row: 9; visibility: hidden;">1</div>
+
+            <!-- Bottom coordinates (files: a-h) -->
+            <div class="coordinate coord-bottom" style="grid-column: 1; visibility: hidden;"></div>
+            <div class="coordinate coord-bottom" style="grid-column: 2; visibility: hidden;">a</div>
+            <div class="coordinate coord-bottom" style="grid-column: 3; visibility: hidden;">b</div>
+            <div class="coordinate coord-bottom" style="grid-column: 4; visibility: hidden;">c</div>
+            <div class="coordinate coord-bottom" style="grid-column: 5; visibility: hidden;">d</div>
+            <div class="coordinate coord-bottom" style="grid-column: 6; visibility: hidden;">e</div>
+            <div class="coordinate coord-bottom" style="grid-column: 7; visibility: hidden;">f</div>
+            <div class="coordinate coord-bottom" style="grid-column: 8; visibility: hidden;">g</div>
+            <div class="coordinate coord-bottom" style="grid-column: 9; visibility: hidden;">h</div>
+            <div class="coordinate coord-bottom" style="grid-column: 10; visibility: hidden;"></div>
+        </div>
+    </div>
+
+    <script>
+        const board = document.getElementById('board');
+        
+        // Initial board setup: 8x8 array where each position contains piece info
+        // Format: {type: 'P'/'R'/'N'/'B'/'Q'/'K', color: 'white'/'black'} or null
+        const initialPosition = [
+            [{type: 'R', color: 'black'}, {type: 'N', color: 'black'}, {type: 'B', color: 'black'}, {type: 'Q', color: 'black'}, {type: 'K', color: 'black'}, {type: 'B', color: 'black'}, {type: 'N', color: 'black'}, {type: 'R', color: 'black'}],
+            [{type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [{type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}],
+            [{type: 'R', color: 'white'}, {type: 'N', color: 'white'}, {type: 'B', color: 'white'}, {type: 'Q', color: 'white'}, {type: 'K', color: 'white'}, {type: 'B', color: 'white'}, {type: 'N', color: 'white'}, {type: 'R', color: 'white'}]
+        ];
+
+        let gameState = JSON.parse(JSON.stringify(initialPosition));
+        let selectedSquare = null;
+
+        function renderBoard() {
+            board.innerHTML = '';
+            
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const square = document.createElement('div');
+                    square.className = 'square ' + ((row + col) % 2 === 0 ? 'light' : 'dark');
+                    square.dataset.row = row;
+                    square.dataset.col = col;
+                    
+                    const piece = gameState[row][col];
+                    if (piece) {
+                        const pieceEl = document.createElement('div');
+                        pieceEl.className = `piece ${piece.color}`;
+                        pieceEl.textContent = piece.type;
+                        pieceEl.draggable = true;
+                        square.appendChild(pieceEl);
+                    }
+                    
+                    square.addEventListener('click', handleSquareClick);
+                    square.addEventListener('dragstart', handleDragStart);
+                    square.addEventListener('dragover', handleDragOver);
+                    square.addEventListener('drop', handleDrop);
+                    
+                    board.appendChild(square);
+                }
+            }
+        }
+
+        function handleSquareClick(e) {
+            const square = e.currentTarget;
+            const row = parseInt(square.dataset.row);
+            const col = parseInt(square.dataset.col);
+            
+            if (selectedSquare) {
+                // Move piece
+                movePiece(selectedSquare.row, selectedSquare.col, row, col);
+                clearSelection();
+            } else if (gameState[row][col]) {
+                // Select piece
+                selectedSquare = {row, col};
+                square.classList.add('highlight');
+            }
+        }
+
+        function handleDragStart(e) {
+            const square = e.currentTarget;
+            const row = parseInt(square.dataset.row);
+            const col = parseInt(square.dataset.col);
+            
+            if (gameState[row][col]) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', JSON.stringify({row, col}));
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+            const targetSquare = e.currentTarget;
+            const toRow = parseInt(targetSquare.dataset.row);
+            const toCol = parseInt(targetSquare.dataset.col);
+            
+            movePiece(data.row, data.col, toRow, toCol);
+        }
+
+        function movePiece(fromRow, fromCol, toRow, toCol) {
+            gameState[toRow][toCol] = gameState[fromRow][fromCol];
+            gameState[fromRow][fromCol] = null;
+            renderBoard();
+        }
+
+        function clearSelection() {
+            selectedSquare = null;
+            document.querySelectorAll('.square.highlight').forEach(sq => {
+                sq.classList.remove('highlight');
+            });
+        }
+
+        // Initial render
+        renderBoard();
+    </script>
+</body>
+</html>
 </style>
 </head>
 <body>
