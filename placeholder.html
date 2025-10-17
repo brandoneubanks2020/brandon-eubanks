@@ -47,7 +47,7 @@
         .board-wrapper {
             display: grid;
             grid-template-columns: 30px repeat(8, 50px) 30px;
-            grid-template-rows: 30px repeat(8, 50px) 30px;
+            grid-template-rows: repeat(8, 50px) 30px 30px;
             gap: 0;
         }
 
@@ -60,14 +60,14 @@
             color: #56a1c8;
         }
 
-        .coord-top { grid-row: 1; }
+        .coord-top { grid-row: 9; }
         .coord-bottom { grid-row: 10; }
         .coord-left { grid-column: 1; }
         .coord-right { grid-column: 10; }
 
         .board {
             grid-column: 2 / 10;
-            grid-row: 2 / 10;
+            grid-row: 1 / 9;
             display: grid;
             grid-template-columns: repeat(8, 50px);
             grid-template-rows: repeat(8, 50px);
@@ -133,14 +133,14 @@
             <div class="coordinate coord-top" style="grid-column: 10;"></div>
 
             <!-- Left coordinates (ranks: 8-1) -->
-            <div class="coordinate coord-left" style="grid-row: 2;">8</div>
-            <div class="coordinate coord-left" style="grid-row: 3;">7</div>
-            <div class="coordinate coord-left" style="grid-row: 4;">6</div>
-            <div class="coordinate coord-left" style="grid-row: 5;">5</div>
-            <div class="coordinate coord-left" style="grid-row: 6;">4</div>
-            <div class="coordinate coord-left" style="grid-row: 7;">3</div>
-            <div class="coordinate coord-left" style="grid-row: 8;">2</div>
-            <div class="coordinate coord-left" style="grid-row: 9;">1</div>
+            <div class="coordinate coord-left" style="grid-row: 1;">8</div>
+            <div class="coordinate coord-left" style="grid-row: 2;">7</div>
+            <div class="coordinate coord-left" style="grid-row: 3;">6</div>
+            <div class="coordinate coord-left" style="grid-row: 4;">5</div>
+            <div class="coordinate coord-left" style="grid-row: 5;">4</div>
+            <div class="coordinate coord-left" style="grid-row: 6;">3</div>
+            <div class="coordinate coord-left" style="grid-row: 7;">2</div>
+            <div class="coordinate coord-left" style="grid-row: 8;">1</div>
 
             <!-- Chess board -->
             <div class="board" id="board"></div>
@@ -278,6 +278,7 @@
         renderBoard();
     </script>
 </body>
+</html>
 </html>
 </html>
 </style>
