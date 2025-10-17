@@ -20,7 +20,7 @@
     .nav-button:hover {
         background-color: #4589ad;
     }
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -175,14 +175,14 @@
         // Initial board setup: 8x8 array where each position contains piece info
         // Format: {type: 'P'/'R'/'N'/'B'/'Q'/'K', color: 'white'/'black'} or null
         const initialPosition = [
-            [{type: 'R', color: 'black'}, {type: 'N', color: 'black'}, {type: 'B', color: 'black'}, {type: 'Q', color: 'black'}, {type: 'K', color: 'black'}, {type: 'B', color: 'black'}, {type: 'N', color: 'black'}, {type: 'R', color: 'black'}],
-            [{type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
-            [null, null, null, null, null, null, null, null],
+            [{type: 'R', color: 'white'}, {type: 'N', color: 'white'}, {type: 'B', color: 'white'}, {type: 'Q', color: 'white'}, {type: 'K', color: 'white'}, {type: 'B', color: 'white'}, {type: 'N', color: 'white'}, {type: 'R', color: 'white'}],
             [{type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}, {type: 'P', color: 'white'}],
-            [{type: 'R', color: 'white'}, {type: 'N', color: 'white'}, {type: 'B', color: 'white'}, {type: 'Q', color: 'white'}, {type: 'K', color: 'white'}, {type: 'B', color: 'white'}, {type: 'N', color: 'white'}, {type: 'R', color: 'white'}]
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [null, null, null, null, null, null, null, null],
+            [{type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}, {type: 'P', color: 'black'}],
+            [{type: 'R', color: 'black'}, {type: 'N', color: 'black'}, {type: 'B', color: 'black'}, {type: 'Q', color: 'black'}, {type: 'K', color: 'black'}, {type: 'B', color: 'black'}, {type: 'N', color: 'black'}, {type: 'R', color: 'black'}]
         ];
 
         let gameState = JSON.parse(JSON.stringify(initialPosition));
@@ -208,6 +208,7 @@
                     }
                     
                     square.addEventListener('click', handleSquareClick);
+                    square.addEventListener('dblclick', (e) => e.preventDefault());
                     square.addEventListener('dragstart', handleDragStart);
                     square.addEventListener('dragover', handleDragOver);
                     square.addEventListener('drop', handleDrop);
@@ -218,6 +219,7 @@
         }
 
         function handleSquareClick(e) {
+            e.preventDefault();
             const square = e.currentTarget;
             const row = parseInt(square.dataset.row);
             const col = parseInt(square.dataset.col);
@@ -276,6 +278,7 @@
         renderBoard();
     </script>
 </body>
+</html>
 </html>
 </style>
 </head>
